@@ -1,6 +1,5 @@
 import Nav from "@/components/Nav"
 import Hero from "@/components/Hero"
-import RightNow from "@/components/RightNow"
 import About from "@/components/About"
 import Portfolio from "@/components/Portfolio"
 import PrintGallery from "@/components/PrintGallery"
@@ -15,7 +14,6 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <RightNow />
         <About />
         <Portfolio />
         <PrintGallery />
