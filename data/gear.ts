@@ -12,7 +12,7 @@ export const gear: GearItem[] = [
     description: "The enclosure I use for my Bambu Lab printer. Huge quality improvement for ABS/ASA and keeps the noise down.",
     category: "3D Printing",
     link: "https://www.amazon.com/Enclosure-Transparent-Isolation-Constant-Temperature/dp/B0G1RGZMHX",
-    image: "", // paste Amazon image URL here
+    image: "/gear/topcube-4.jpg",
   },
   // Add more gear items here
 ]
