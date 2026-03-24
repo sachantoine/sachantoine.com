@@ -13,11 +13,14 @@ export default function Store() {
         >
           {/* Burgundy header bar */}
           <div className="bg-[#a42325] px-8 py-6 sm:px-12">
-            <p className="font-['Barlow_Condensed',_'Barlow',_sans-serif] text-xs font-bold uppercase tracking-[0.2em] text-white/70">
-              Shop
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="font-['Barlow_Condensed',_'Barlow',_sans-serif] text-xs font-bold uppercase tracking-[0.2em] text-white/70">
+                Shop
+              </p>
+              <span className="text-xs font-medium text-white/60">@curated.creation</span>
+            </div>
             <h2 className="mt-1 font-['Barlow_Condensed',_'Barlow',_sans-serif] text-3xl font-bold uppercase tracking-wide text-white sm:text-4xl">
-              By Curated Creations
+              Curated Creations
             </h2>
           </div>
 
