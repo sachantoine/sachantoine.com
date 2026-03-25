@@ -22,7 +22,7 @@ export default function Hero() {
           alt="Sach Antoine"
           fill
           sizes="112px"
-          className="object-cover object-top"
+          className="object-cover object-center"
           priority
         />
       </div>
