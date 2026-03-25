@@ -8,6 +8,7 @@ export const siteConfig = {
     instagram: "https://www.instagram.com/sachantoine_/",
     github: "https://github.com/sachantoine",
     shopify: "https://bycuratedcreations.com",
+    makerworld: "https://makerworld.com/en/@sachantoine",
   },
 }
 

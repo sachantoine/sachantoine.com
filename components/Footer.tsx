@@ -10,6 +10,7 @@ export default function Footer() {
           <a href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">Instagram</a>
           <a href={siteConfig.socials.github} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">GitHub</a>
           <a href={siteConfig.socials.shopify} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">Shop</a>
+          <a href={siteConfig.socials.makerworld} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">MakerWorld</a>
         </div>
       </div>
     </footer>

@@ -60,6 +60,14 @@ export default function Hero() {
           </svg>
           Shop
         </SocialIcon>
+
+        <SocialIcon href={siteConfig.socials.makerworld} label="MakerWorld">
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
+            <path d="M12 8v8M8 12h8"/>
+          </svg>
+          MakerWorld
+        </SocialIcon>
       </div>
     </section>
   )
