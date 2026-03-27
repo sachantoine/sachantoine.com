@@ -8,6 +8,7 @@ const links = [
   { label: "Gear", href: "#gear" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
+  { label: "Pricing Calculator", href: "/tools" },
 ]
 
 export default function Nav() {
