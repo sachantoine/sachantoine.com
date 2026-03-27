@@ -6,7 +6,9 @@ const PRINTERS: { group: string; models: { label: string; watts: number }[] }[] 
   {
     group: "Bambu Lab",
     models: [
-      { label: "H2D", watts: 220 },
+      { label: "H2C", watts: 350 },
+      { label: "H2D", watts: 300 },
+      { label: "H2S", watts: 200 },
       { label: "X1 Carbon", watts: 130 },
       { label: "X1E", watts: 135 },
       { label: "P1S", watts: 110 },
