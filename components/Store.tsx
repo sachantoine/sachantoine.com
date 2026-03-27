@@ -2,7 +2,7 @@ import { siteConfig } from "@/data/config"
 
 export default function Store() {
   return (
-    <section id="store" className="px-6 py-20">
+    <section id="store" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
 
         <a

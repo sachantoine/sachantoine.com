@@ -3,7 +3,7 @@ import { gear } from "@/data/gear"
 
 export default function Gear() {
   return (
-    <section id="gear" className="px-6 py-20">
+    <section id="gear" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
         <div className="mb-3">
           <h2 className="text-2xl font-bold tracking-tight text-white">Gear I Use</h2>

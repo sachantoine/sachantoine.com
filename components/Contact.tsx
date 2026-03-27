@@ -36,7 +36,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="px-6 py-20">
+    <section id="contact" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-12 md:grid-cols-2">
           <div>

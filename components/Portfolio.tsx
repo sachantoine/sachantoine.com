@@ -2,7 +2,7 @@ import { projects } from "@/data/projects"
 
 export default function Portfolio() {
   return (
-    <section id="projects" className="px-6 py-20">
+    <section id="projects" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 flex items-end justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-white">Projects</h2>

@@ -2,7 +2,7 @@ import { siteConfig } from "@/data/config"
 
 export default function About() {
   return (
-    <section id="about" className="px-6 py-20">
+    <section id="about" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="mb-10 text-2xl font-bold tracking-tight text-white">About</h2>
         <div className="grid gap-10 md:grid-cols-2">
