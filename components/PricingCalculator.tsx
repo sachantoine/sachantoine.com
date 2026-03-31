@@ -171,12 +171,10 @@ const REGIONS: { group: string; places: { label: string; rate: number }[] }[] = 
 ]
 
 interface Plate {
-  id: number
+  id: string
   filamentCost: string
   printTimeHr: string
 }
-
-let nextId = 1
 
 function parseNum(val: string, fallback = 0): number {
   const n = parseFloat(val)
@@ -208,7 +206,7 @@ function GlassCard({ children, className = "" }: { children: React.ReactNode; cl
 const labelClass = "block text-xs font-medium text-neutral-400 mb-1.5"
 
 export default function PricingCalculator() {
-  const [plates, setPlates] = useState<Plate[]>([{ id: nextId++, filamentCost: "", printTimeHr: "" }])
+  const [plates, setPlates] = useState<Plate[]>([{ id: crypto.randomUUID(), filamentCost: "", printTimeHr: "" }])
   const [printerKey, setPrinterKey] = useState("Bambu Lab|X1 Carbon")
   const [customWatts, setCustomWatts] = useState("")
   const [regionKey, setRegionKey] = useState("United States|US National Average")
@@ -227,15 +225,15 @@ export default function PricingCalculator() {
   const isCustomRegion = selectedRegion?.rate === 0
   const electricityRate = isCustomRegion ? parseNum(customRate, 0) : (selectedRegion?.rate ?? 0.16)
 
-  const updatePlate = useCallback((id: number, field: keyof Omit<Plate, "id">, value: string) => {
+  const updatePlate = useCallback((id: string, field: keyof Omit<Plate, "id">, value: string) => {
     setPlates((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)))
   }, [])
 
   const addPlate = useCallback(() => {
-    setPlates((prev) => [...prev, { id: nextId++, filamentCost: "", printTimeHr: "" }])
+    setPlates((prev) => [...prev, { id: crypto.randomUUID(), filamentCost: "", printTimeHr: "" }])
   }, [])
 
-  const removePlate = useCallback((id: number) => {
+  const removePlate = useCallback((id: string) => {
     setPlates((prev) => prev.filter((p) => p.id !== id))
   }, [])
 

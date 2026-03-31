@@ -98,7 +98,6 @@ export default function WebGLShader() {
     handleResize()
 
     const animate = () => {
-      if (refs.uniforms) (refs.uniforms.time.value as number)
       refs.uniforms!.time.value = (refs.uniforms!.time.value as number) + 0.01
       refs.renderer!.render(refs.scene!, refs.camera!)
       refs.animationId = requestAnimationFrame(animate)

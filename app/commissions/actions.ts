@@ -25,7 +25,12 @@ export async function submitCommission(
 ): Promise<CommissionFormState> {
   const name = (formData.get("name") as string)?.trim()
   const email = (formData.get("email") as string)?.trim()
-  const type = formData.get("type") as CommissionType
+  const rawType = (formData.get("type") as string)?.trim()
+  const VALID_TYPES: CommissionType[] = ["custom-design", "personalized", "other"]
+  if (!VALID_TYPES.includes(rawType as CommissionType)) {
+    return { success: false, error: "Invalid commission type." }
+  }
+  const type = rawType as CommissionType
   const description = (formData.get("description") as string)?.trim()
   const color = (formData.get("color") as string)?.trim() ?? ""
   const dimensions = (formData.get("dimensions") as string)?.trim() ?? ""
@@ -40,7 +45,16 @@ export async function submitCommission(
     return { success: false, error: "Please enter a valid email address." }
   }
 
-  const id = generateId()
+  // Ensure ID is unique
+  let id = generateId()
+  let attempts = 0
+  while (attempts < 5) {
+    const exists = await redis.get(`commission:${id}`)
+    if (!exists) break
+    id = generateId()
+    attempts++
+  }
+
   const commission: Commission = {
     id,
     createdAt: new Date().toISOString(),
