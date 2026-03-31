@@ -92,7 +92,10 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                 { label: "Type", value: TYPE_LABELS[commission.type] },
                 { label: "Quantity", value: String(commission.quantity) },
                 commission.color && { label: "Color", value: commission.color },
-                commission.dimensions && { label: "Dimensions", value: commission.dimensions },
+                commission.dimensions && {
+                  label: commission.type === "personalized" ? "Text to add" : commission.type === "other" ? "Change requested" : "Dimensions",
+                  value: commission.dimensions,
+                },
                 commission.deadline && { label: "Deadline", value: commission.deadline },
               ]
                 .filter(Boolean)
@@ -112,7 +115,9 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                 ))}
             </dl>
             <div className="mt-4 border-t border-white/10 pt-4">
-              <dt className="text-xs text-neutral-500">Description</dt>
+              <dt className="text-xs text-neutral-500">
+                {commission.type === "personalized" ? "Design to personalize" : commission.type === "other" ? "Base design" : "Brief"}
+              </dt>
               <dd className="mt-2 text-sm text-neutral-200 leading-relaxed whitespace-pre-wrap">{commission.description}</dd>
             </div>
           </div>

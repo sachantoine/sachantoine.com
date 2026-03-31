@@ -13,9 +13,11 @@ export default function About() {
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            <div className="rounded-xl border border-white/10 p-5">
-              <p className="mb-2 text-xs uppercase tracking-widest text-neutral-500">What I Do</p>
-              <ul className="space-y-1.5 text-sm text-neutral-300">
+            <div className="relative rounded-xl p-5">
+              <div className="pointer-events-none absolute inset-0 z-0 rounded-xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
+              <div className="pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-xl" style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
+              <p className="relative z-10 mb-2 text-xs uppercase tracking-widest" style={{ color: "var(--blue-light)" }}>What I Do</p>
+              <ul className="relative z-10 space-y-1.5 text-sm text-neutral-300">
                 <li>3D design and print-on-demand</li>
                 <li>Custom print commissions</li>
                 <li>Content creation and video</li>

@@ -1,4 +1,5 @@
 import { siteConfig } from "@/data/config"
+import LiquidGlassButton from "@/components/LiquidGlassButton"
 
 export default function Store() {
   return (
@@ -9,8 +10,9 @@ export default function Store() {
           href={siteConfig.socials.shopify}
           target="_blank"
           rel="noopener noreferrer"
-          className="group block overflow-hidden rounded-2xl border border-white/10 transition-all hover:border-white/20"
+          className="group relative block overflow-hidden rounded-2xl transition-transform duration-300 hover:scale-[1.01]"
         >
+          <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
           {/* Burgundy header bar */}
           <div className="bg-[#a42325] px-8 py-6 sm:px-12">
             <div className="flex items-center justify-between">
@@ -29,9 +31,9 @@ export default function Store() {
             <p className="text-sm leading-relaxed text-neutral-400 sm:max-w-md">
               Custom 3D printed products — wine tags, keychains, desk accessories, and more. Designed and printed by me, shipped directly to you.
             </p>
-            <span className="shrink-0 rounded border border-[#a42325] bg-[#a42325] px-6 py-2.5 text-sm font-semibold uppercase tracking-widest text-white transition-all group-hover:bg-[#8a1e1f]">
+            <LiquidGlassButton className="shrink-0 px-6 py-2.5 font-semibold uppercase tracking-widest text-white">
               Shop Now
-            </span>
+            </LiquidGlassButton>
           </div>
         </a>
 

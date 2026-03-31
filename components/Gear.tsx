@@ -19,10 +19,15 @@ export default function Gear() {
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 transition-all hover:border-white/20 hover:bg-white/[0.06]"
+              className="group relative flex items-start gap-4 rounded-xl p-4 transition-transform duration-300 hover:scale-[1.02]"
             >
+              <div className="pointer-events-none absolute inset-0 z-0 rounded-xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-xl"
+                style={{ backdropFilter: 'url("#liquid-glass-filter")' }}
+              />
               {/* Product image or fallback icon */}
-              <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/5">
+              <div className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/5">
                 {item.image ? (
                   <Image
                     src={item.image}
@@ -39,11 +44,11 @@ export default function Gear() {
                 )}
               </div>
 
-              <div className="flex-1 min-w-0">
+              <div className="relative z-10 flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <p className="font-medium text-white">{item.name}</p>
                   <span className="shrink-0 text-xs text-neutral-500 transition-colors group-hover:text-neutral-300">
-                    Amazon →
+                    Shop →
                   </span>
                 </div>
                 <p className="mt-1 text-sm leading-relaxed text-neutral-400">{item.description}</p>

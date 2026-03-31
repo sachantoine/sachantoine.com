@@ -1,5 +1,7 @@
 import Image from "next/image"
 import { siteConfig } from "@/data/config"
+import WebGLShader from "@/components/WebGLShader"
+import TextScramble from "@/components/TextScramble"
 
 const SocialIcon = ({ href, label, children }: { href: string; label: string; children: React.ReactNode }) => (
   <a
@@ -7,15 +9,19 @@ const SocialIcon = ({ href, label, children }: { href: string; label: string; ch
     target="_blank"
     rel="noopener noreferrer"
     aria-label={label}
-    className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-neutral-400 transition-all hover:border-white/30 hover:text-white"
+    className="pill-accent relative flex items-center gap-2 rounded-full px-4 py-2 text-sm text-neutral-400 transition-transform duration-300 hover:scale-105"
   >
-    {children}
+    <div className="pointer-events-none absolute inset-0 z-0 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
+    <div className="pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-full" style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
+    <span className="relative z-10 flex items-center gap-2">{children}</span>
   </a>
 )
 
 export default function Hero() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16 text-center">
+    <section className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16 text-center overflow-hidden">
+      <WebGLShader />
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16 text-center">
       <div className="relative mb-6 h-28 w-28 overflow-hidden rounded-full border border-white/10">
         <Image
           src="/profile.jpg"
@@ -28,9 +34,11 @@ export default function Hero() {
       </div>
 
       <h1 className="mb-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-        {siteConfig.name}
+        <TextScramble text={siteConfig.name} />
       </h1>
-      <p className="mb-8 text-lg text-neutral-400">{siteConfig.tagline}</p>
+      <p className="mb-8 text-lg text-neutral-400">
+        <TextScramble text={siteConfig.tagline} />
+      </p>
 
       <div className="flex flex-wrap justify-center gap-3">
         <SocialIcon href={siteConfig.socials.tiktok} label="TikTok">
@@ -68,6 +76,7 @@ export default function Hero() {
           </svg>
           MakerWorld
         </SocialIcon>
+      </div>
       </div>
     </section>
   )

@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import LiquidGlassButton from "@/components/LiquidGlassButton"
 
 const links = [
   { label: "About", href: "#about" },
@@ -9,9 +10,10 @@ const links = [
   { label: "Gear", href: "#gear" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
-  { label: "Pricing Calculator", href: "/tools" },
-  { label: "Commissions", href: "/commissions" },
+  { label: "Pricing", href: "/tools" },
 ]
+
+const ctaLink = { label: "Commissions", href: "/commissions" }
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
@@ -27,7 +29,7 @@ export default function Nav() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Link href="/" className="text-sm font-semibold tracking-tight text-white">
-          sacha antoine
+          Sacha Antoine
         </Link>
 
         {/* Desktop nav */}
@@ -41,6 +43,9 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
+          <LiquidGlassButton href={ctaLink.href} className="px-4 py-2 text-white">
+            {ctaLink.label}
+          </LiquidGlassButton>
         </nav>
 
         {/* Mobile hamburger */}
@@ -68,6 +73,9 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
+          <LiquidGlassButton href={ctaLink.href} onClick={() => setOpen(false)} className="mt-2 w-full px-4 py-2 text-white">
+            {ctaLink.label}
+          </LiquidGlassButton>
         </nav>
       )}
     </header>

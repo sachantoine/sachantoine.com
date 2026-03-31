@@ -1,7 +1,8 @@
 "use client"
 import { useState, useCallback } from "react"
+import LiquidGlassInput from "@/components/LiquidGlassInput"
+import LiquidGlassButton from "@/components/LiquidGlassButton"
 
-// Printers: average consumption during printing (not peak)
 const PRINTERS: { group: string; models: { label: string; watts: number }[] }[] = [
   {
     group: "Bambu Lab",
@@ -79,7 +80,6 @@ const PRINTERS: { group: string; models: { label: string; watts: number }[] }[] 
 
 const ALL_PRINTERS = PRINTERS.flatMap((g) => g.models.map((m) => ({ ...m, group: g.group })))
 
-// Electricity rates by region ($/kWh, approximate 2024–2025 averages)
 const REGIONS: { group: string; places: { label: string; rate: number }[] }[] = [
   {
     group: "United States",
@@ -191,6 +191,22 @@ function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text).catch(() => {})
 }
 
+const glassCard = "relative rounded-xl"
+const glassShadow = "pointer-events-none absolute inset-0 z-0 rounded-xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]"
+const glassBackdrop = "pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-xl"
+
+function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`${glassCard} ${className}`}>
+      <div className={glassShadow} />
+      <div className={glassBackdrop} style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
+      {children}
+    </div>
+  )
+}
+
+const labelClass = "block text-xs font-medium text-neutral-400 mb-1.5"
+
 export default function PricingCalculator() {
   const [plates, setPlates] = useState<Plate[]>([{ id: nextId++, filamentCost: "", printTimeHr: "" }])
   const [printerKey, setPrinterKey] = useState("Bambu Lab|X1 Carbon")
@@ -266,11 +282,6 @@ export default function PricingCalculator() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const inputClass =
-    "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-white/30"
-  const labelClass = "block text-xs font-medium text-neutral-400 mb-1.5"
-  const selectClass = inputClass + " cursor-pointer"
-
   return (
     <section className="px-6 py-20">
       <div className="mx-auto max-w-5xl">
@@ -289,8 +300,8 @@ export default function PricingCalculator() {
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Print Plates</h2>
               <div className="space-y-3">
                 {plates.map((plate, i) => (
-                  <div key={plate.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-                    <div className="mb-3 flex items-center justify-between">
+                  <GlassCard key={plate.id} className="p-4">
+                    <div className="relative z-10 mb-3 flex items-center justify-between">
                       <span className="text-xs font-medium text-neutral-500">Plate {i + 1}</span>
                       {plates.length > 1 && (
                         <button
@@ -302,42 +313,34 @@ export default function PricingCalculator() {
                         </button>
                       )}
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="relative z-10 grid grid-cols-2 gap-3">
                       <div>
                         <label className={labelClass}>Filament Cost ($)</label>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          placeholder="From slicer"
+                        <LiquidGlassInput
+                          type="number" min="0" step="0.01" placeholder="From slicer"
                           value={plate.filamentCost}
                           onChange={(e) => updatePlate(plate.id, "filamentCost", e.target.value)}
-                          className={inputClass}
                         />
                       </div>
                       <div>
                         <label className={labelClass}>Print Time (hrs)</label>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.1"
-                          placeholder="From slicer"
+                        <LiquidGlassInput
+                          type="number" min="0" step="0.1" placeholder="From slicer"
                           value={plate.printTimeHr}
                           onChange={(e) => updatePlate(plate.id, "printTimeHr", e.target.value)}
-                          className={inputClass}
                         />
                       </div>
                     </div>
-                  </div>
+                  </GlassCard>
                 ))}
               </div>
-              <button
+              <LiquidGlassButton
                 type="button"
                 onClick={addPlate}
-                className="mt-3 w-full rounded-lg border border-dashed border-white/10 py-2.5 text-sm text-neutral-500 transition-colors hover:border-white/20 hover:text-neutral-300"
+                className="mt-3 w-full py-2.5 text-neutral-400 hover:text-neutral-200"
               >
                 + Add plate
-              </button>
+              </LiquidGlassButton>
             </div>
 
             {/* Printer */}
@@ -345,11 +348,7 @@ export default function PricingCalculator() {
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Printer</h2>
               <div>
                 <label className={labelClass}>Printer Model</label>
-                <select
-                  value={printerKey}
-                  onChange={(e) => setPrinterKey(e.target.value)}
-                  className={selectClass}
-                >
+                <LiquidGlassInput as="select" value={printerKey} onChange={(e) => setPrinterKey(e.target.value)}>
                   {PRINTERS.map((g) => (
                     <optgroup key={g.group} label={g.group}>
                       {g.models.map((m) => (
@@ -359,19 +358,15 @@ export default function PricingCalculator() {
                       ))}
                     </optgroup>
                   ))}
-                </select>
+                </LiquidGlassInput>
               </div>
               {isCustomPrinter && (
                 <div className="mt-3">
                   <label className={labelClass}>Average Wattage During Print (W)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    placeholder="e.g. 120"
+                  <LiquidGlassInput
+                    type="number" min="0" step="1" placeholder="e.g. 120"
                     value={customWatts}
                     onChange={(e) => setCustomWatts(e.target.value)}
-                    className={inputClass}
                   />
                 </div>
               )}
@@ -382,11 +377,7 @@ export default function PricingCalculator() {
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Electricity</h2>
               <div>
                 <label className={labelClass}>Region</label>
-                <select
-                  value={regionKey}
-                  onChange={(e) => setRegionKey(e.target.value)}
-                  className={selectClass}
-                >
+                <LiquidGlassInput as="select" value={regionKey} onChange={(e) => setRegionKey(e.target.value)}>
                   {REGIONS.map((g) => (
                     <optgroup key={g.group} label={g.group}>
                       {g.places.map((p) => (
@@ -396,19 +387,15 @@ export default function PricingCalculator() {
                       ))}
                     </optgroup>
                   ))}
-                </select>
+                </LiquidGlassInput>
               </div>
               {isCustomRegion && (
                 <div className="mt-3">
                   <label className={labelClass}>Your Rate ($/kWh)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="e.g. 0.14"
+                  <LiquidGlassInput
+                    type="number" min="0" step="0.01" placeholder="e.g. 0.14"
                     value={customRate}
                     onChange={(e) => setCustomRate(e.target.value)}
-                    className={inputClass}
                   />
                 </div>
               )}
@@ -420,26 +407,18 @@ export default function PricingCalculator() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className={labelClass}>Hourly Rate ($/hr) <span className="text-neutral-600">optional</span></label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    placeholder="e.g. 15"
+                  <LiquidGlassInput
+                    type="number" min="0" step="0.5" placeholder="e.g. 15"
                     value={hourlyRate}
                     onChange={(e) => setHourlyRate(e.target.value)}
-                    className={inputClass}
                   />
                 </div>
                 <div>
                   <label className={labelClass}>Custom Markup (%) <span className="text-neutral-600">optional</span></label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    placeholder="e.g. 80"
+                  <LiquidGlassInput
+                    type="number" min="0" step="1" placeholder="e.g. 80"
                     value={markupPct}
                     onChange={(e) => setMarkupPct(e.target.value)}
-                    className={inputClass}
                   />
                 </div>
               </div>
@@ -451,40 +430,45 @@ export default function PricingCalculator() {
             <h2 className="mb-5 text-sm font-semibold uppercase tracking-widest text-neutral-500">Cost Breakdown</h2>
 
             {!hasData ? (
-              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-8 text-center text-sm text-neutral-500">
-                Enter filament cost and print time on at least one plate to see your costs
-              </div>
+              <GlassCard className="p-8 text-center text-sm text-neutral-500">
+                <span className="relative z-10">Enter filament cost and print time on at least one plate to see your costs</span>
+              </GlassCard>
             ) : (
               <div className="space-y-3">
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] divide-y divide-white/5">
-                  <CostRow label={`Filament (${plates.length} plate${plates.length > 1 ? "s" : ""})`} value={totalFilamentCost} />
-                  <CostRow label={`Electricity (${wattage}W × ${fmt(totalPrintTime)}hr)`} value={electricityCost} />
-                  {laborCost > 0 && <CostRow label={`Labor (${fmt(totalPrintTime)}hr × $${labor}/hr)`} value={laborCost} />}
-                  <CostRow label="Total cost" value={totalCost} bold />
-                </div>
+                <GlassCard>
+                  <div className="relative z-10 divide-y divide-white/5">
+                    <CostRow label={`Filament (${plates.length} plate${plates.length > 1 ? "s" : ""})`} value={totalFilamentCost} />
+                    <CostRow label={`Electricity (${wattage}W × ${fmt(totalPrintTime)}hr)`} value={electricityCost} />
+                    {laborCost > 0 && <CostRow label={`Labor (${fmt(totalPrintTime)}hr × $${labor}/hr)`} value={laborCost} />}
+                    <CostRow label="Total cost" value={totalCost} bold />
+                  </div>
+                </GlassCard>
 
                 <h2 className="pt-2 text-sm font-semibold uppercase tracking-widest text-neutral-500">Suggested Sell Price</h2>
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] divide-y divide-white/5">
-                  <SellRow label="50% markup" value={sell50} />
-                  <SellRow label="100% markup" value={sell100} highlight />
-                  <SellRow label="150% markup" value={sell150} />
-                  {sellCustom !== null && (
-                    <SellRow label={`${fmt(markup)}% markup (custom)`} value={sellCustom} />
-                  )}
-                </div>
+                <GlassCard>
+                  <div className="relative z-10 divide-y divide-white/5">
+                    <SellRow label="50% markup" value={sell50} />
+                    <SellRow label="100% markup" value={sell100} highlight />
+                    <SellRow label="150% markup" value={sell150} />
+                    {sellCustom !== null && (
+                      <SellRow label={`${fmt(markup)}% markup (custom)`} value={sellCustom} />
+                    )}
+                  </div>
+                </GlassCard>
 
                 {getVerdict() && (
-                  <div className="rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-neutral-300">
-                    {getVerdict()}
-                  </div>
+                  <GlassCard className="px-4 py-3">
+                    <span className="relative z-10 text-sm text-neutral-300">{getVerdict()}</span>
+                  </GlassCard>
                 )}
 
-                <button
+                <LiquidGlassButton
+                  type="button"
                   onClick={handleCopy}
-                  className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-5 py-3 text-sm text-neutral-300 transition-all hover:border-white/20 hover:text-white active:scale-[0.98]"
+                  className="mt-2 w-full py-3 text-sm text-neutral-300"
                 >
                   {copied ? "Copied!" : "Copy Quote to Clipboard"}
-                </button>
+                </LiquidGlassButton>
                 <p className="text-xs text-center text-neutral-600">Copies a formatted message at 100% markup</p>
               </div>
             )}

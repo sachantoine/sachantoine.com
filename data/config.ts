@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Sacha Antoine",
-  tagline: "Creator. 3D Designer. Cybersecurity.",
+  tagline: "3D designer. Content creator.",
   bio: "I create content and design things worth printing. Based in the US, I run a 3D print shop shipping custom designs directly to your door.",
   email: "contact@sachantoine.com",
   socials: {

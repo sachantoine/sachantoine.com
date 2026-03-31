@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react"
 import { siteConfig } from "@/data/config"
+import LiquidGlassButton from "@/components/LiquidGlassButton"
+import LiquidGlassInput from "@/components/LiquidGlassInput"
 
 // To wire up the form:
 // 1. Go to formspree.io, create a free account
@@ -70,43 +72,19 @@ export default function Contact() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                required
-                className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-white/30"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                required
-                className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-white/30"
-              />
+              <LiquidGlassInput type="text" name="name" placeholder="Name" required />
+              <LiquidGlassInput type="email" name="email" placeholder="Email" required />
             </div>
-            <input
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              required
-              className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-white/30"
-            />
-            <textarea
-              name="message"
-              placeholder="Message"
-              required
-              rows={5}
-              className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-white/30 resize-none"
-            />
+            <LiquidGlassInput type="text" name="subject" placeholder="Subject" required />
+            <LiquidGlassInput as="textarea" name="message" placeholder="Message" required rows={5} />
 
-            <button
+            <LiquidGlassButton
               type="submit"
               disabled={status === "sending" || status === "sent"}
-              className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-80 disabled:opacity-50"
+              className="px-5 py-3 text-white"
             >
               {status === "sending" ? "Sending..." : status === "sent" ? "Sent!" : "Send Message"}
-            </button>
+            </LiquidGlassButton>
 
             {status === "error" && (
               <p className="text-sm text-red-400">Something went wrong. Email me directly at {siteConfig.email}</p>

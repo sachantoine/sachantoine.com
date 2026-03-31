@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+:root {
+  --blue:       #1d4ed8;
+  --blue-light: #3b82f6;
+  --blue-dark:  #1e3a8a;
+  --blue-rgb:   29, 78, 216;
+}
+
+.pill-accent:hover {
+  border-color: rgba(var(--blue-rgb), 0.45) !important;
+  color: var(--blue-light) !important;
+  background: rgba(var(--blue-rgb), 0.08) !important;
+}
+
 ::selection {
   background: #333;
   color: #fff;
