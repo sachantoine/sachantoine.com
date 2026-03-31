@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { Geist } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })
@@ -27,6 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <body suppressHydrationWarning className={`${geist.className} bg-[#0a0a0a] text-white antialiased`}>
         {children}
+        <Analytics />
+        <SpeedInsights />
         <svg className="hidden" aria-hidden="true">
           <defs>
             <filter id="liquid-glass-filter" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">

@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react"
 import { useFormStatus } from "react-dom"
+import { track } from "@vercel/analytics"
 import Nav from "@/components/Nav"
 import Footer from "@/components/Footer"
 import LiquidGlassInput from "@/components/LiquidGlassInput"
@@ -89,7 +90,7 @@ export default function CommissionsPage() {
             </p>
           </div>
 
-          <form action={formAction} className="space-y-8">
+          <form action={formAction} onSubmit={() => track("commission_submit", { type: selectedType ?? "unknown" })} className="space-y-8">
             {/* Type selection */}
             <div>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-neutral-500">What do you need?</h2>

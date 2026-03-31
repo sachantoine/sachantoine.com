@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { track } from "@vercel/analytics"
 import { siteConfig } from "@/data/config"
 import LiquidGlassButton from "@/components/LiquidGlassButton"
 import LiquidGlassInput from "@/components/LiquidGlassInput"
@@ -29,11 +30,14 @@ export default function Contact() {
       if (res.ok) {
         setStatus("sent")
         form.reset()
+        track("contact_submit", { status: "success" })
       } else {
         setStatus("error")
+        track("contact_submit", { status: "error" })
       }
     } catch {
       setStatus("error")
+      track("contact_submit", { status: "error" })
     }
   }
 

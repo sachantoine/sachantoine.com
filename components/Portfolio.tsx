@@ -1,4 +1,7 @@
+"use client"
+
 import { projects } from "@/data/projects"
+import TrackableLink from "@/components/TrackableLink"
 
 export default function Portfolio() {
   return (
@@ -6,14 +9,15 @@ export default function Portfolio() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 flex items-end justify-between">
           <h2 className="text-2xl font-bold tracking-tight text-white">Projects</h2>
-          <a
+          <TrackableLink
             href="https://github.com/sachantoine"
             target="_blank"
             rel="noopener noreferrer"
+            event="github_profile_click"
             className="text-sm text-neutral-400 transition-colors hover:text-white"
           >
             All on GitHub →
-          </a>
+          </TrackableLink>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -51,24 +55,28 @@ export default function Portfolio() {
                 </div>
                 <div className="flex gap-3">
                   {p.github && (
-                    <a
+                    <TrackableLink
                       href={p.github}
                       target="_blank"
                       rel="noopener noreferrer"
+                      event="project_click"
+                      properties={{ project: p.name, type: "github" }}
                       className="text-xs text-neutral-400 transition-colors hover:text-white"
                     >
                       GitHub →
-                    </a>
+                    </TrackableLink>
                   )}
                   {p.demo && (
-                    <a
+                    <TrackableLink
                       href={p.demo}
                       target="_blank"
                       rel="noopener noreferrer"
+                      event="project_click"
+                      properties={{ project: p.name, type: "demo" }}
                       className="text-xs text-neutral-400 transition-colors hover:text-white"
                     >
                       Live →
-                    </a>
+                    </TrackableLink>
                   )}
                 </div>
               </div>

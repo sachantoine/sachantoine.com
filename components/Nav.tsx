@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { track } from "@vercel/analytics"
 import LiquidGlassButton from "@/components/LiquidGlassButton"
 
 const links = [
@@ -43,7 +44,7 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <LiquidGlassButton href={ctaLink.href} className="px-4 py-2 text-white">
+          <LiquidGlassButton href={ctaLink.href} onClick={() => track("commissions_cta_click", { location: "nav" })} className="px-4 py-2 text-white">
             {ctaLink.label}
           </LiquidGlassButton>
         </nav>
@@ -73,7 +74,7 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <LiquidGlassButton href={ctaLink.href} onClick={() => setOpen(false)} className="mt-2 w-full px-4 py-2 text-white">
+          <LiquidGlassButton href={ctaLink.href} onClick={() => { setOpen(false); track("commissions_cta_click", { location: "mobile_nav" }) }} className="mt-2 w-full px-4 py-2 text-white">
             {ctaLink.label}
           </LiquidGlassButton>
         </nav>

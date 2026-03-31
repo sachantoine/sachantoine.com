@@ -1,15 +1,20 @@
+"use client"
+
 import { siteConfig } from "@/data/config"
 import LiquidGlassButton from "@/components/LiquidGlassButton"
+import TrackableLink from "@/components/TrackableLink"
 
 export default function Store() {
   return (
     <section id="store" className="scroll-mt-20 px-6 py-20">
       <div className="mx-auto max-w-5xl">
 
-        <a
+        <TrackableLink
           href={siteConfig.socials.shopify}
           target="_blank"
           rel="noopener noreferrer"
+          event="store_click"
+          properties={{ location: "card" }}
           className="group relative block overflow-hidden rounded-2xl transition-transform duration-300 hover:scale-[1.01]"
         >
           <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
@@ -35,7 +40,7 @@ export default function Store() {
               Shop Now
             </LiquidGlassButton>
           </div>
-        </a>
+        </TrackableLink>
 
       </div>
     </section>
