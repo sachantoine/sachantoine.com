@@ -8,6 +8,13 @@ export type GearItem = {
 
 export const gear: GearItem[] = [
   {
+    name: "SALTGATOR",
+    description: "Desktop soft plastic injection machine I use with 3D printed molds. Makes custom softbaits in minutes, pairs perfectly with a Bambu printer.",
+    category: "3D Printing",
+    link: "https://saltgator.com/SA15",
+    image: "/gear/saltgator.jpg",
+  },
+  {
     name: "Topcube Enclosure",
     description: "The enclosure I use for my Bambu Lab printer. Huge quality improvement for ABS/ASA and keeps the noise down.",
     category: "3D Printing",
