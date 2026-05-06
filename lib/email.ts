@@ -128,7 +128,16 @@ export async function sendAdminNotification(commission: Commission) {
       ${row("Description", commission.description, true)}
     </table>
 
-    ${commission.referenceImages?.length ? `<p style="color:#737373;font-size:13px;margin:16px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">${commission.referenceImages.length} reference image(s) uploaded.</p>` : ""}
+    ${commission.referenceImages?.length ? `
+    <p style="color:#737373;font-size:11px;text-transform:uppercase;letter-spacing:0.12em;margin:20px 0 10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">Reference Images</p>
+    <table cellpadding="0" cellspacing="0"><tr>
+      ${commission.referenceImages.map(url => `
+        <td style="padding-right:8px;">
+          <a href="${url}" target="_blank">
+            <img src="${url}" width="120" height="120" style="display:block;border-radius:8px;object-fit:cover;border:1px solid #2a2a2a;" alt="Reference image" />
+          </a>
+        </td>`).join("")}
+    </tr></table>` : ""}
 
     ${btn(`https://sachantoine.com/admin/commissions/${commission.id}`, "Open in Admin")}
   `
