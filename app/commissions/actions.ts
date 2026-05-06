@@ -2,7 +2,6 @@
 
 import { redis } from "@/lib/redis"
 import { sendCustomerConfirmation, sendAdminNotification } from "@/lib/email"
-import { put } from "@vercel/blob"
 import type { Commission, CommissionType } from "@/types/commission"
 
 function generateId(): string {
@@ -52,19 +51,12 @@ export async function submitCommission(
     attempts++
   }
 
-  // Upload reference images to Vercel Blob
-  const referenceImages: string[] = []
-  const imageFiles = formData.getAll("images") as File[]
-  for (const file of imageFiles) {
-    if (file && file.size > 0) {
-      try {
-        const { url } = await put(`commissions/${id}/${file.name}`, file, { access: "public" })
-        referenceImages.push(url)
-      } catch {
-        // non-fatal — continue without image
-      }
-    }
-  }
+  // Image URLs uploaded client-side via /api/upload before form submission
+  let referenceImages: string[] = []
+  try {
+    const raw = formData.get("imageUrls") as string
+    if (raw) referenceImages = JSON.parse(raw)
+  } catch { /* ignore */ }
 
   const commission: Commission = {
     id,

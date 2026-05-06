@@ -22,11 +22,11 @@ const TYPES: { value: CommissionType; label: string; desc: string }[] = [
 const glassShadow = "pointer-events-none absolute inset-0 z-0 rounded-xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]"
 const glassBackdrop = "pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-xl"
 
-function SubmitButton() {
+function SubmitButton({ uploading }: { uploading: boolean }) {
   const { pending } = useFormStatus()
   return (
-    <LiquidGlassButton type="submit" disabled={pending} className="w-full py-3 text-white">
-      {pending ? "Submitting..." : "Submit Request"}
+    <LiquidGlassButton type="submit" disabled={pending || uploading} className="w-full py-3 text-white">
+      {uploading ? "Uploading images..." : pending ? "Submitting..." : "Submit Request"}
     </LiquidGlassButton>
   )
 }
@@ -80,7 +80,25 @@ export default function CommissionsPage() {
   const [state, formAction] = useActionState(submitCommission, initialState)
   const [selectedType, setSelectedType] = useState<CommissionType | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? [])
+    setSelectedFiles(files)
+    setImageUrls([])
+    if (files.length === 0) return
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      files.forEach(f => fd.append("files", f))
+      const res = await fetch("/api/upload", { method: "POST", body: fd })
+      const data = await res.json()
+      setImageUrls(data.urls ?? [])
+    } catch { /* skip */ }
+    setUploading(false)
+  }
 
   if (state.success && state.commissionId) {
     return (
@@ -240,18 +258,22 @@ export default function CommissionsPage() {
                         <input
                           ref={fileInputRef}
                           type="file"
-                          name="images"
                           multiple
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
+                          onChange={handleFileChange}
                         />
-                        {selectedFiles.length > 0 ? (
+                        <input type="hidden" name="imageUrls" value={JSON.stringify(imageUrls)} />
+                        {uploading ? (
+                          <p className="text-sm text-neutral-400">Uploading...</p>
+                        ) : selectedFiles.length > 0 ? (
                           <div className="space-y-1">
                             {selectedFiles.map((f) => (
                               <p key={f.name} className="text-sm text-neutral-300">{f.name}</p>
                             ))}
-                            <p className="mt-2 text-xs text-neutral-600">Click to change</p>
+                            <p className="mt-2 text-xs text-neutral-600">
+                              {imageUrls.length > 0 ? `${imageUrls.length} uploaded ✓` : "Click to change"}
+                            </p>
                           </div>
                         ) : (
                           <>
@@ -267,7 +289,7 @@ export default function CommissionsPage() {
 
                 {state.error && <p className="text-sm text-red-400">{state.error}</p>}
 
-                <SubmitButton />
+                <SubmitButton uploading={uploading} />
 
                 <p className="text-center text-xs text-neutral-600">
                   No payment until you approve the quote. Quote within 48 hours.
