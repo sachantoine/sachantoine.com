@@ -1,7 +1,8 @@
 "use client"
 
-import { useActionState, useState } from "react"
+import { useActionState, useState, useRef } from "react"
 import { useFormStatus } from "react-dom"
+import { useRouter } from "next/navigation"
 import { track } from "@vercel/analytics"
 import Nav from "@/components/Nav"
 import Footer from "@/components/Footer"
@@ -41,9 +42,45 @@ function Field({ id, label, required, children }: { id: string; label: string; r
   )
 }
 
+function TrackOrderSection() {
+  const [orderId, setOrderId] = useState("")
+  const router = useRouter()
+
+  function handleTrack(e: React.FormEvent) {
+    e.preventDefault()
+    const id = orderId.trim().toUpperCase()
+    if (id) router.push(`/commissions/${id}`)
+  }
+
+  return (
+    <div className="relative rounded-xl p-6 mb-12">
+      <div className={glassShadow} />
+      <div className={glassBackdrop} style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
+      <div className="relative z-10">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-500 mb-4">Track Your Order</h2>
+        <form onSubmit={handleTrack} className="flex gap-3">
+          <LiquidGlassInput
+            id="track-id"
+            type="text"
+            value={orderId}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOrderId(e.target.value)}
+            placeholder="CC-1234"
+            className="flex-1 font-mono uppercase"
+          />
+          <LiquidGlassButton type="submit" className="shrink-0 px-5 py-2.5 text-white">
+            Track →
+          </LiquidGlassButton>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function CommissionsPage() {
   const [state, formAction] = useActionState(submitCommission, initialState)
   const [selectedType, setSelectedType] = useState<CommissionType | null>(null)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (state.success && state.commissionId) {
     return (
@@ -58,7 +95,7 @@ export default function CommissionsPage() {
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xl">✓</div>
                 <h1 className="text-2xl font-bold text-white">Request Received!</h1>
                 <p className="mt-3 text-neutral-400">
-                  Check your email for a confirmation. If you have reference images, reply to that email with them attached.
+                  Check your email for a confirmation with your order details.
                 </p>
                 <div className="relative mt-6 rounded-lg px-6 py-4">
                   <div className="pointer-events-none absolute inset-0 z-0 rounded-lg shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
@@ -83,6 +120,9 @@ export default function CommissionsPage() {
       <Nav />
       <main className="pt-24 px-6 pb-20">
         <div className="mx-auto max-w-2xl">
+
+          <TrackOrderSection />
+
           <div className="mb-10">
             <h1 className="text-3xl font-bold tracking-tight text-white">Custom Commission</h1>
             <p className="mt-3 text-neutral-400">
@@ -136,7 +176,7 @@ export default function CommissionsPage() {
                       <>
                         <Field id="description" label="Brief" required>
                           <LiquidGlassInput as="textarea" id="description" name="description" required rows={5}
-                            placeholder="Describe the object in detail — what it is, what it's for, the style or look you're after. Reference images can be emailed after submitting." />
+                            placeholder="Describe the object in detail — what it is, what it's for, the style or look you're after." />
                         </Field>
                         <div className="grid gap-4 sm:grid-cols-2">
                           <Field id="dimensions" label="Dimensions / Size">
@@ -162,7 +202,6 @@ export default function CommissionsPage() {
                         <Field id="color" label="Color / Filament">
                           <LiquidGlassInput id="color" type="text" name="color" placeholder="e.g. White base, red text — or no pref" />
                         </Field>
-                        <p className="text-xs text-neutral-600">Want a logo instead of text? Reply to your confirmation email with the image file.</p>
                       </>
                     )}
 
@@ -190,6 +229,41 @@ export default function CommissionsPage() {
                         <LiquidGlassInput id="deadline" type="text" name="deadline" placeholder="e.g. ASAP, no rush, by April 15" />
                       </Field>
                     </div>
+
+                    {/* Reference images */}
+                    <div>
+                      <label className="mb-1.5 block text-sm text-neutral-300">
+                        Reference Images <span className="text-neutral-600">(optional)</span>
+                      </label>
+                      <div
+                        className="relative cursor-pointer rounded-xl border border-dashed border-white/20 p-6 text-center transition-colors hover:border-white/40"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          name="images"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
+                        />
+                        {selectedFiles.length > 0 ? (
+                          <div className="space-y-1">
+                            {selectedFiles.map((f) => (
+                              <p key={f.name} className="text-sm text-neutral-300">{f.name}</p>
+                            ))}
+                            <p className="mt-2 text-xs text-neutral-600">Click to change</p>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-sm text-neutral-400">Click to upload reference images</p>
+                            <p className="mt-1 text-xs text-neutral-600">JPG, PNG, WEBP — up to 5 files</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
                   </div>
                 </div>
 

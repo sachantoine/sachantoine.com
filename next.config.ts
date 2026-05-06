@@ -1,10 +1,16 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**.media-amazon.com" },
       { protocol: "https", hostname: "**.ssl-images-amazon.com" },
+      { protocol: "https", hostname: "**.public.blob.vercel-storage.com" },
     ],
   },
   async headers() {

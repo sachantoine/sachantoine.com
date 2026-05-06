@@ -91,7 +91,16 @@ export default async function CommissionStatusPage({
                   <div className={glassRoundedLg} />
                   <div className="pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-lg" style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
                   <p className="relative z-10 text-sm text-neutral-400">Quote Total</p>
-                  <p className="relative z-10 mt-0.5 text-lg font-semibold text-white">${commission.quoteAmount.toFixed(2)} CAD</p>
+                  <p className="relative z-10 mt-0.5 text-lg font-semibold text-white">${commission.quoteAmount.toFixed(2)} USD</p>
+                </div>
+              )}
+
+              {(commission.status === "shipped" || commission.status === "delivered") && commission.trackingInfo && (
+                <div className="relative mt-4 rounded-lg px-4 py-3">
+                  <div className={glassRoundedLg} />
+                  <div className="pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-lg" style={{ backdropFilter: 'url("#liquid-glass-filter")' }} />
+                  <p className="relative z-10 text-sm text-neutral-400">Tracking</p>
+                  <p className="relative z-10 mt-0.5 text-sm font-mono text-white break-all">{commission.trackingInfo}</p>
                 </div>
               )}
 
@@ -124,7 +133,7 @@ export default async function CommissionStatusPage({
                   commission.deadline && { label: "Deadline", value: commission.deadline },
                   {
                     label: "Submitted",
-                    value: new Date(commission.createdAt).toLocaleDateString("en-CA", {
+                    value: new Date(commission.createdAt).toLocaleDateString("en-US", {
                       year: "numeric", month: "long", day: "numeric",
                     }),
                   },

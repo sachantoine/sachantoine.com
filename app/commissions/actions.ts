@@ -2,15 +2,12 @@
 
 import { redis } from "@/lib/redis"
 import { sendCustomerConfirmation, sendAdminNotification } from "@/lib/email"
+import { put } from "@vercel/blob"
 import type { Commission, CommissionType } from "@/types/commission"
 
 function generateId(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-  let id = "CC-"
-  for (let i = 0; i < 6; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)]
-  }
-  return id
+  const digits = Math.floor(1000 + Math.random() * 9000)
+  return `CC-${digits}`
 }
 
 export type CommissionFormState = {
@@ -55,6 +52,20 @@ export async function submitCommission(
     attempts++
   }
 
+  // Upload reference images to Vercel Blob
+  const referenceImages: string[] = []
+  const imageFiles = formData.getAll("images") as File[]
+  for (const file of imageFiles) {
+    if (file && file.size > 0) {
+      try {
+        const { url } = await put(`commissions/${id}/${file.name}`, file, { access: "public" })
+        referenceImages.push(url)
+      } catch {
+        // non-fatal — continue without image
+      }
+    }
+  }
+
   const commission: Commission = {
     id,
     createdAt: new Date().toISOString(),
@@ -70,6 +81,8 @@ export async function submitCommission(
     adminNotes: "",
     quoteAmount: null,
     shopifyDraftOrderUrl: "",
+    trackingInfo: "",
+    referenceImages,
   }
 
   try {

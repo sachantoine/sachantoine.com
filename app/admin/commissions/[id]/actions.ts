@@ -12,6 +12,7 @@ export async function updateCommission(
     adminNotes?: string
     quoteAmount?: number | null
     shopifyDraftOrderUrl?: string
+    trackingInfo?: string
   }
 ) {
   const raw = await redis.get<string>(`commission:${id}`)

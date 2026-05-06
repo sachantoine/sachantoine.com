@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import Image from "next/image"
 import type { Commission, CommissionStatus } from "@/types/commission"
 import { STATUS_LABELS, TYPE_LABELS } from "@/types/commission"
 import { updateCommission } from "./actions"
@@ -36,11 +37,13 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState("")
 
-  // Local form state
   const [status, setStatus] = useState<CommissionStatus>(commission.status)
   const [adminNotes, setAdminNotes] = useState(commission.adminNotes)
   const [quoteAmount, setQuoteAmount] = useState(commission.quoteAmount?.toString() ?? "")
   const [shopifyUrl, setShopifyUrl] = useState(commission.shopifyDraftOrderUrl)
+  const [trackingInfo, setTrackingInfo] = useState(commission.trackingInfo ?? "")
+
+  const showTracking = status === "shipped" || status === "delivered"
 
   function handleSave() {
     setError("")
@@ -51,16 +54,19 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
         adminNotes,
         quoteAmount: quoteAmount ? parseFloat(quoteAmount) : null,
         shopifyDraftOrderUrl: shopifyUrl,
+        trackingInfo,
       })
       if (result.error) {
         setError(result.error)
       } else {
-        setCommission({ ...commission, status, adminNotes, quoteAmount: quoteAmount ? parseFloat(quoteAmount) : null, shopifyDraftOrderUrl: shopifyUrl })
+        setCommission({ ...commission, status, adminNotes, quoteAmount: quoteAmount ? parseFloat(quoteAmount) : null, shopifyDraftOrderUrl: shopifyUrl, trackingInfo })
         setSaved(true)
         setTimeout(() => setSaved(false), 2000)
       }
     })
   }
+
+  const images = commission.referenceImages ?? []
 
   return (
     <main className="px-6 py-10">
@@ -83,43 +89,59 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Order details */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Order Details</h2>
-            <dl className="space-y-3">
-              {[
-                { label: "Name", value: commission.name },
-                { label: "Email", value: commission.email, link: `mailto:${commission.email}` },
-                { label: "Type", value: TYPE_LABELS[commission.type] },
-                { label: "Quantity", value: String(commission.quantity) },
-                commission.color && { label: "Color", value: commission.color },
-                commission.dimensions && {
-                  label: commission.type === "personalized" ? "Text to add" : commission.type === "other" ? "Change requested" : "Dimensions",
-                  value: commission.dimensions,
-                },
-                commission.deadline && { label: "Deadline", value: commission.deadline },
-              ]
-                .filter(Boolean)
-                .map((item) => (
-                  <div key={(item as { label: string }).label} className="flex gap-3">
-                    <dt className="w-24 shrink-0 text-xs text-neutral-500 pt-0.5">{(item as { label: string }).label}</dt>
-                    <dd className="text-sm text-neutral-200">
-                      {(item as { link?: string }).link ? (
-                        <a href={(item as { link: string }).link} className="hover:text-white transition-colors underline underline-offset-2">
-                          {(item as { value: string }).value}
-                        </a>
-                      ) : (
-                        (item as { value: string }).value
-                      )}
-                    </dd>
-                  </div>
-                ))}
-            </dl>
-            <div className="mt-4 border-t border-white/10 pt-4">
-              <dt className="text-xs text-neutral-500">
-                {commission.type === "personalized" ? "Design to personalize" : commission.type === "other" ? "Base design" : "Brief"}
-              </dt>
-              <dd className="mt-2 text-sm text-neutral-200 leading-relaxed whitespace-pre-wrap">{commission.description}</dd>
+          <div className="space-y-4">
+            <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Order Details</h2>
+              <dl className="space-y-3">
+                {[
+                  { label: "Name", value: commission.name },
+                  { label: "Email", value: commission.email, link: `mailto:${commission.email}` },
+                  { label: "Type", value: TYPE_LABELS[commission.type] },
+                  { label: "Quantity", value: String(commission.quantity) },
+                  commission.color && { label: "Color", value: commission.color },
+                  commission.dimensions && {
+                    label: commission.type === "personalized" ? "Text to add" : commission.type === "other" ? "Change requested" : "Dimensions",
+                    value: commission.dimensions,
+                  },
+                  commission.deadline && { label: "Deadline", value: commission.deadline },
+                ]
+                  .filter(Boolean)
+                  .map((item) => (
+                    <div key={(item as { label: string }).label} className="flex gap-3">
+                      <dt className="w-24 shrink-0 text-xs text-neutral-500 pt-0.5">{(item as { label: string }).label}</dt>
+                      <dd className="text-sm text-neutral-200">
+                        {(item as { link?: string }).link ? (
+                          <a href={(item as { link: string }).link} className="hover:text-white transition-colors underline underline-offset-2">
+                            {(item as { value: string }).value}
+                          </a>
+                        ) : (
+                          (item as { value: string }).value
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+              </dl>
+              <div className="mt-4 border-t border-white/10 pt-4">
+                <dt className="text-xs text-neutral-500">
+                  {commission.type === "personalized" ? "Design to personalize" : commission.type === "other" ? "Base design" : "Brief"}
+                </dt>
+                <dd className="mt-2 text-sm text-neutral-200 leading-relaxed whitespace-pre-wrap">{commission.description}</dd>
+              </div>
             </div>
+
+            {/* Reference images */}
+            {images.length > 0 && (
+              <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-neutral-500">Reference Images</h2>
+                <div className="grid grid-cols-3 gap-2">
+                  {images.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="relative aspect-square overflow-hidden rounded-lg border border-white/10 bg-white/5">
+                      <Image src={url} alt={`Reference ${i + 1}`} fill className="object-cover" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Admin controls */}
@@ -140,6 +162,17 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                     ))}
                   </select>
                 </div>
+
+                {showTracking && (
+                  <div>
+                    <label className="mb-1.5 block text-xs text-neutral-400">Tracking Information</label>
+                    <LiquidGlassInputPlain
+                      value={trackingInfo}
+                      onChange={setTrackingInfo}
+                      placeholder="e.g. USPS 9400111899223407481267 — track at usps.com"
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label className="mb-1.5 block text-xs text-neutral-400">Quote Amount (USD)</label>
@@ -212,7 +245,7 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                     rel="noopener noreferrer"
                     className="flex items-center justify-between rounded-lg border border-white/10 px-3 py-2 text-sm text-neutral-300 hover:text-white transition-colors"
                   >
-                    <span>Shopify draft order</span>
+                    <span>Invoice / payment link</span>
                     <span className="text-neutral-600">↗</span>
                   </a>
                 )}
@@ -229,5 +262,17 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
         </div>
       </div>
     </main>
+  )
+}
+
+function LiquidGlassInputPlain({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-neutral-600 outline-none focus:border-white/30"
+    />
   )
 }

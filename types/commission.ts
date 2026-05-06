@@ -26,6 +26,8 @@ export type Commission = {
   adminNotes: string
   quoteAmount: number | null
   shopifyDraftOrderUrl: string
+  trackingInfo: string
+  referenceImages: string[]
 }
 
 export const STATUS_LABELS: Record<CommissionStatus, string> = {
@@ -43,11 +45,11 @@ export const STATUS_LABELS: Record<CommissionStatus, string> = {
 export const STATUS_DESCRIPTIONS: Record<CommissionStatus, string> = {
   pending: "Your request has been received. We'll review it shortly.",
   reviewing: "We're reviewing your request and will send a quote soon.",
-  quoted: "A quote has been sent to your email via Shopify. Check your inbox.",
+  quoted: "A quote has been sent to your email. Check your inbox.",
   "awaiting-payment": "We're waiting on your payment to get started.",
   paid: "Payment received! Your order is queued for printing.",
   printing: "Your order is currently being printed.",
-  shipped: "Your order has shipped! Check your email for tracking info.",
+  shipped: "Your order has shipped! Tracking info is below.",
   delivered: "Your order has been delivered. Thanks!",
   cancelled: "This order has been cancelled.",
 }
