@@ -4,6 +4,7 @@ export type GearItem = {
   category: string
   link: string
   image?: string
+  discount?: string
 }
 
 export const gear: GearItem[] = [
@@ -13,6 +14,7 @@ export const gear: GearItem[] = [
     category: "3D Printing",
     link: "https://saltgator.com/SA15",
     image: "/gear/saltgator.jpg",
+    discount: "SA15 — 15% off",
   },
   {
     name: "Topcube Enclosure",

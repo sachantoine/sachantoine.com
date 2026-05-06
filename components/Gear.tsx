@@ -51,6 +51,11 @@ export default function Gear() {
                   <span className="mt-2 inline-block rounded border border-white/10 px-2 py-0.5 text-xs text-neutral-500">
                     {item.category}
                   </span>
+                  {item.discount && (
+                    <span className="ml-2 mt-2 inline-block rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-xs text-blue-400">
+                      {item.discount}
+                    </span>
+                  )}
                 </div>
               </>
             )
