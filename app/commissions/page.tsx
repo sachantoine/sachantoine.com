@@ -121,8 +121,6 @@ export default function CommissionsPage() {
       <main className="pt-24 px-6 pb-20">
         <div className="mx-auto max-w-2xl">
 
-          <TrackOrderSection />
-
           <div className="mb-10">
             <h1 className="text-3xl font-bold tracking-tight text-white">Custom Commission</h1>
             <p className="mt-3 text-neutral-400">
@@ -277,6 +275,10 @@ export default function CommissionsPage() {
               </>
             )}
           </form>
+
+          <div className="mt-16">
+            <TrackOrderSection />
+          </div>
         </div>
       </main>
       <Footer />
