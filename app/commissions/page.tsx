@@ -80,14 +80,16 @@ export default function CommissionsPage() {
   const [state, formAction] = useActionState(submitCommission, initialState)
   const [selectedType, setSelectedType] = useState<CommissionType | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [uploadedCount, setUploadedCount] = useState(0)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const imageUrlsInputRef = useRef<HTMLInputElement>(null)
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
     setSelectedFiles(files)
-    setImageUrls([])
+    setUploadedCount(0)
+    if (imageUrlsInputRef.current) imageUrlsInputRef.current.value = "[]"
     if (files.length === 0) return
     setUploading(true)
     try {
@@ -95,7 +97,10 @@ export default function CommissionsPage() {
       files.forEach(f => fd.append("files", f))
       const res = await fetch("/api/upload", { method: "POST", body: fd })
       const data = await res.json()
-      setImageUrls(data.urls ?? [])
+      const urls: string[] = data.urls ?? []
+      // Set directly on the DOM so the form action reads the current value
+      if (imageUrlsInputRef.current) imageUrlsInputRef.current.value = JSON.stringify(urls)
+      setUploadedCount(urls.length)
     } catch { /* skip */ }
     setUploading(false)
   }
@@ -263,7 +268,7 @@ export default function CommissionsPage() {
                           className="hidden"
                           onChange={handleFileChange}
                         />
-                        <input type="hidden" name="imageUrls" value={JSON.stringify(imageUrls)} />
+                        <input ref={imageUrlsInputRef} type="hidden" name="imageUrls" defaultValue="[]" />
                         {uploading ? (
                           <p className="text-sm text-neutral-400">Uploading...</p>
                         ) : selectedFiles.length > 0 ? (
@@ -272,7 +277,7 @@ export default function CommissionsPage() {
                               <p key={f.name} className="text-sm text-neutral-300">{f.name}</p>
                             ))}
                             <p className="mt-2 text-xs text-neutral-600">
-                              {imageUrls.length > 0 ? `${imageUrls.length} uploaded ✓` : "Click to change"}
+                              {uploadedCount > 0 ? `${uploadedCount} uploaded ✓` : "Click to change"}
                             </p>
                           </div>
                         ) : (
