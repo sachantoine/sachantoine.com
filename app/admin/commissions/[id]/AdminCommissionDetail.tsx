@@ -73,7 +73,7 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
             </Link>
             <h1 className="mt-2 font-mono text-xl font-bold text-white">{commission.id}</h1>
             <p className="mt-0.5 text-sm text-neutral-500">
-              Submitted {new Date(commission.createdAt).toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+              Submitted {new Date(commission.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
           <span className={`rounded-full px-3 py-1 text-sm font-medium ${STATUS_BADGE[commission.status]}`}>
@@ -142,7 +142,7 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-xs text-neutral-400">Quote Amount (CAD)</label>
+                  <label className="mb-1.5 block text-xs text-neutral-400">Quote Amount (USD)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -155,12 +155,12 @@ export default function AdminCommissionDetail({ commission: initial }: { commiss
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-xs text-neutral-400">Shopify Draft Order URL</label>
+                  <label className="mb-1.5 block text-xs text-neutral-400">Invoice / Payment Link</label>
                   <input
                     type="url"
                     value={shopifyUrl}
                     onChange={(e) => setShopifyUrl(e.target.value)}
-                    placeholder="https://..."
+                    placeholder="https://bycuratedcreations.com/..."
                     className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-neutral-600 outline-none focus:border-white/30"
                   />
                 </div>
