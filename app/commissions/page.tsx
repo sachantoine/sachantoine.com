@@ -1,7 +1,6 @@
 "use client"
 
-import { useActionState, useState, useRef } from "react"
-import { useFormStatus } from "react-dom"
+import { useActionState, useState, useRef, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { track } from "@vercel/analytics"
 import Nav from "@/components/Nav"
@@ -22,8 +21,7 @@ const TYPES: { value: CommissionType; label: string; desc: string }[] = [
 const glassShadow = "pointer-events-none absolute inset-0 z-0 rounded-xl shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]"
 const glassBackdrop = "pointer-events-none absolute inset-0 -z-10 isolate overflow-hidden rounded-xl"
 
-function SubmitButton({ uploading }: { uploading: boolean }) {
-  const { pending } = useFormStatus()
+function SubmitButton({ uploading, pending }: { uploading: boolean; pending: boolean }) {
   return (
     <LiquidGlassButton type="submit" disabled={pending || uploading} className="w-full py-3 text-white">
       {uploading ? "Uploading images..." : pending ? "Submitting..." : "Submit Request"}
@@ -82,14 +80,16 @@ export default function CommissionsPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [uploadedCount, setUploadedCount] = useState(0)
   const [uploading, setUploading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const imageUrlsInputRef = useRef<HTMLInputElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const imageUrlsRef = useRef<string[]>([])
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
     setSelectedFiles(files)
     setUploadedCount(0)
-    if (imageUrlsInputRef.current) imageUrlsInputRef.current.value = "[]"
+    imageUrlsRef.current = []
     if (files.length === 0) return
     setUploading(true)
     try {
@@ -97,12 +97,18 @@ export default function CommissionsPage() {
       files.forEach(f => fd.append("files", f))
       const res = await fetch("/api/upload", { method: "POST", body: fd })
       const data = await res.json()
-      const urls: string[] = data.urls ?? []
-      // Set directly on the DOM so the form action reads the current value
-      if (imageUrlsInputRef.current) imageUrlsInputRef.current.value = JSON.stringify(urls)
-      setUploadedCount(urls.length)
+      imageUrlsRef.current = data.urls ?? []
+      setUploadedCount(imageUrlsRef.current.length)
     } catch { /* skip */ }
     setUploading(false)
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    track("commission_submit", { type: selectedType ?? "unknown" })
+    const formData = new FormData(e.currentTarget)
+    formData.set("imageUrls", JSON.stringify(imageUrlsRef.current))
+    startTransition(() => { formAction(formData) })
   }
 
   if (state.success && state.commissionId) {
@@ -151,7 +157,7 @@ export default function CommissionsPage() {
             </p>
           </div>
 
-          <form action={formAction} onSubmit={() => track("commission_submit", { type: selectedType ?? "unknown" })} className="space-y-8">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
             {/* Type selection */}
             <div>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-neutral-500">What do you need?</h2>
@@ -268,7 +274,6 @@ export default function CommissionsPage() {
                           className="hidden"
                           onChange={handleFileChange}
                         />
-                        <input ref={imageUrlsInputRef} type="hidden" name="imageUrls" defaultValue="[]" />
                         {uploading ? (
                           <p className="text-sm text-neutral-400">Uploading...</p>
                         ) : selectedFiles.length > 0 ? (
@@ -294,7 +299,7 @@ export default function CommissionsPage() {
 
                 {state.error && <p className="text-sm text-red-400">{state.error}</p>}
 
-                <SubmitButton uploading={uploading} />
+                <SubmitButton uploading={uploading} pending={isPending} />
 
                 <p className="text-center text-xs text-neutral-600">
                   No payment until you approve the quote. Quote within 48 hours.
