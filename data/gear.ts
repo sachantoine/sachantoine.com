@@ -10,7 +10,7 @@ export type GearItem = {
 export const gear: GearItem[] = [
   {
     name: "FlashForge Creator 5",
-    description: "Dual-extrusion, high-speed 3D printer with a full-metal frame and auto-calibration. Great for reliable, fast prints straight out of the box.",
+    description: "High-speed 3D printer with 4 independent toolheads and a full-metal frame with auto-calibration. Great for reliable, fast prints straight out of the box.",
     category: "3D Printing",
     link: "https://flashforge.sjv.io/JkW21a",
     image: "/gear/flashforge-creator5.png",
@@ -18,7 +18,7 @@ export const gear: GearItem[] = [
   },
   {
     name: "FlashForge Creator 5 Pro",
-    description: "Pro version of the Creator 5 with upgraded dual-extrusion and higher-temp hotends for engineering filaments. My pick for demanding materials.",
+    description: "Pro version of the Creator 5 with 4 independent toolheads and a heated chamber for engineering-grade filaments. My pick for demanding materials.",
     category: "3D Printing",
     link: "https://flashforge.sjv.io/WO0NbM",
     image: "/gear/flashforge-creator5-pro.png",
