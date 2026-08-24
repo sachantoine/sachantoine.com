@@ -9,6 +9,20 @@ export type GearItem = {
 
 export const gear: GearItem[] = [
   {
+    name: "FlashForge Creator 5",
+    description: "Dual-extrusion, high-speed 3D printer with a full-metal frame and auto-calibration. Great for reliable, fast prints straight out of the box.",
+    category: "3D Printing",
+    link: "https://flashforge.sjv.io/JkW21a",
+    image: "/gear/flashforge-creator5.png",
+  },
+  {
+    name: "FlashForge Creator 5 Pro",
+    description: "Pro version of the Creator 5 with upgraded dual-extrusion and higher-temp hotends for engineering filaments. My pick for demanding materials.",
+    category: "3D Printing",
+    link: "https://flashforge.sjv.io/WO0NbM",
+    image: "/gear/flashforge-creator5-pro.png",
+  },
+  {
     name: "SALTGATOR",
     description: "Desktop soft plastic injection machine I use with 3D printed molds. Makes custom softbaits in minutes, pairs perfectly with a Bambu printer.",
     category: "3D Printing",
@@ -64,19 +78,5 @@ export const gear: GearItem[] = [
     category: "Tools",
     link: "https://www.amazon.com/dp/B0F3X74WT9",
     image: "/gear/fanttik-s2-pro.png",
-  },
-  {
-    name: "FlashForge Creator 5",
-    description: "Dual-extrusion, high-speed 3D printer with a full-metal frame and auto-calibration. Great for reliable, fast prints straight out of the box.",
-    category: "3D Printing",
-    link: "https://flashforge.sjv.io/JkW21a",
-    image: "/gear/flashforge-creator5.png",
-  },
-  {
-    name: "FlashForge Creator 5 Pro",
-    description: "Pro version of the Creator 5 with upgraded dual-extrusion and higher-temp hotends for engineering filaments. My pick for demanding materials.",
-    category: "3D Printing",
-    link: "https://flashforge.sjv.io/WO0NbM",
-    image: "/gear/flashforge-creator5-pro.png",
   },
 ]
