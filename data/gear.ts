@@ -14,6 +14,7 @@ export const gear: GearItem[] = [
     category: "3D Printing",
     link: "https://flashforge.sjv.io/JkW21a",
     image: "/gear/flashforge-creator5.png",
+    discount: "C5CREATOR30 — $30 off",
   },
   {
     name: "FlashForge Creator 5 Pro",
@@ -21,6 +22,7 @@ export const gear: GearItem[] = [
     category: "3D Printing",
     link: "https://flashforge.sjv.io/WO0NbM",
     image: "/gear/flashforge-creator5-pro.png",
+    discount: "C5CREATOR30 — $30 off",
   },
   {
     name: "SALTGATOR",
